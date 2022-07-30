@@ -29,16 +29,16 @@
 * mmcv: for swin backbones
 * timm: for swin backbones
 
-# To train a model
+# To train a model using 8 cards
 
 ```Bash
 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
     --coco_path <coco path>
 ```
 
-# To eval a model
+# To eval a model using 8 cards
 
 ```Bash
 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
-    --coco_path <coco path> --eval
+    --coco_path <coco path> --eval --resume <checkpoint path>
 ```
