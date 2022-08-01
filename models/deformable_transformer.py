@@ -1,4 +1,8 @@
 # ------------------------------------------------------------------------
+# H-DETR
+# Copyright (c) 2022 Peking University & Microsoft Research Asia. All Rights Reserved.
+# Licensed under the MIT-style license found in the LICENSE file in the root directory
+# ------------------------------------------------------------------------
 # Deformable DETR
 # Copyright (c) 2020 SenseTime. All Rights Reserved.
 # Licensed under the Apache License, Version 2.0 [see LICENSE for details]
