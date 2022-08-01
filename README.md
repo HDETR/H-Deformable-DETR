@@ -4,8 +4,8 @@ This is the official implementation of the paper "[DETRs with Hybrid Matching](h
 
 Authors: [Ding Jia](), [Yuhui Yuan](), [Haodi He](), [Xiaopei Wu](), [Haojun Yu](), [Weihong Lin](), [Lei Sun](), [Chao Zhang](https://www.cis.pku.edu.cn/info/1084/1272.htm), [Han Hu]()
 
-## Citing H-Deformable DETR
-If you find H-Deformable DETR useful in your research, please consider citing:
+## Citing H-Deformable-DETR
+If you find H-Deformable-DETR useful in your research, please consider citing:
 ```bibtex
 @article{jia2022detrs,
   title={DETRs with Hybrid Matching},
@@ -80,7 +80,7 @@ GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
 
 ### Distributed Run
 
-You can refer to [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) to enable training on multiple nodes.
+You can refer to [Deformable-DETR](https://github.com/fundamentalvision/Deformable-DETR) to enable training on multiple nodes.
 
 ## Modified files compared to vanilla Deformable DETR
 
