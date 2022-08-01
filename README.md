@@ -1,4 +1,4 @@
-# H-Deformable DETR
+# H-Deformable-DETR
 
 This is the official implementation of the paper "[DETRs with Hybrid Matching](https://arxiv.org/abs/2207.13080)". 
 
