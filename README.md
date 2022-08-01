@@ -121,7 +121,7 @@ GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
     --coco_path <coco path>
 ```
 
-To run a model with the swin transformer backbone, you need to download the backbone from the [offical repo](https://github.com/microsoft/Swin-Transformer#main-results-on-imagenet-with-pretrained-models) frist and specify argument`--pretrained_backbone_path`.
+To train/eval a model with the swin transformer backbone, you need to download the backbone from the [offical repo](https://github.com/microsoft/Swin-Transformer#main-results-on-imagenet-with-pretrained-models) frist and specify argument`--pretrained_backbone_path` like [our configs](./configs/two_stage/deformable-detr-hybrid-branch/36eps/swin).
 
 ### To eval a model using 8 cards
 
