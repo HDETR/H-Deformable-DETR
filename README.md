@@ -2,38 +2,23 @@
 
 This is the official implementation of the paper "[DETRs with Hybrid Matching](https://arxiv.org/abs/2207.13080)". 
 
-# Modified files compared to vanilla Deformable DETR
+Authors: [Ding Jia](), [Yuhui Yuan](), [Haodi He](), [Xiaopei Wu](), [Haojun Yu](), [Weihong Lin](), [Lei Sun](), [Chao Zhang](https://www.cis.pku.edu.cn/info/1084/1272.htm), [Han Hu]()
 
-## To support swin backbones
-* models/backbone.py
-* models/swin_transformer.py
-* mmcv_custom
+## Citing H-Deformable DETR
+If you find H-Deformable DETR useful in your research, please consider citing:
+```bibtex
+@article{jia2022detrs,
+  title={DETRs with Hybrid Matching},
+  author={Jia, Ding and Yuan, Yuhui and He, Haodi and Wu, Xiaopei and Yu, Haojun and Lin, Weihong and Sun, Lei and Zhang, Chao and Hu, Han},
+  journal={arXiv preprint arXiv:2207.13080},
+  year={2022}
+}
+```
+## Model ZOO
 
-## To support eval in the training set
-* datasets/coco.py
-* datasets/\_\_init\_\_.py
+We provide a set of baseline results and trained models available for download in the [H-Deformable detr Model Zoo](MODEL_ZOO.md).
 
-## To support Hybird-branch, tricks and checkpoint
-* main.py
-* engine.py
-* models/deformable_detr.py
-* models/deformable_transformer.py
-
-## To support fp16
-* models/ops/modules/ms_deform_attn.py
-* models/ops/functions/ms_deform_attn_func.py
-
-## To fix a pytorch version bug
-* util/misc.py
-
-## Addictional packages needed
-
-* wandb: for logging
-* mmdet: for swin backbones
-* mmcv: for swin backbones
-* timm: for swin backbones
-
-# Installation
+## Installation
 We test our models under ```python=3.7.10,pytorch=1.10.1,cuda=10.2```. Other versions might be available as well.
 
 1. Clone this repo
@@ -64,35 +49,66 @@ cd models/ops
 python setup.py build install
 # unit test (should see all checking is True)
 python test.py
-cd ../../..
+cd ../..
 ```
 
-# Model ZOO
-
-We provide a set of baseline results and trained models available for download in the [H-Deformable detr Model Zoo](MODEL_ZOO.md).
-
-# Data
+## Data
 
 Please download [COCO 2017](https://cocodataset.org/) dataset and organize them as following:
 ```
-coco/
+coco_path/
   ├── train2017/
   ├── val2017/
   └── annotations/
   	├── instances_train2017.json
   	└── instances_val2017.json
 ```
-# Run
-## To train a model using 8 cards
+## Run
+### To train a model using 8 cards
 
 ```Bash
 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
     --coco_path <coco path>
 ```
 
-## To eval a model using 8 cards
+### To eval a model using 8 cards
 
 ```Bash
 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 <config path> \
     --coco_path <coco path> --eval --resume <checkpoint path>
 ```
+
+### Distributed Run
+
+You can refer to [Deformable DETR](https://github.com/fundamentalvision/Deformable-DETR) to enable training on multiple nodes.
+
+## Modified files compared to vanilla Deformable DETR
+
+### To support swin backbones
+* models/backbone.py
+* models/swin_transformer.py
+* mmcv_custom
+
+### To support eval in the training set
+* datasets/coco.py
+* datasets/\_\_init\_\_.py
+
+### To support Hybird-branch, tricks and checkpoint
+* main.py
+* engine.py
+* models/deformable_detr.py
+* models/deformable_transformer.py
+
+### To support fp16
+* models/ops/modules/ms_deform_attn.py
+* models/ops/functions/ms_deform_attn_func.py
+
+### To fix a pytorch version bug
+* util/misc.py
+
+### Addictional packages needed
+
+* wandb: for logging
+* mmdet: for swin backbones
+* mmcv: for swin backbones
+* timm: for swin backbones
