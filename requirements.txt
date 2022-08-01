@@ -3,3 +3,4 @@ tqdm
 cython
 scipy
 wandb
+timm
