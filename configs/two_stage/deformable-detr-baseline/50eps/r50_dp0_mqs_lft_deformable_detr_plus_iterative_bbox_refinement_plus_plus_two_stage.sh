@@ -2,7 +2,7 @@
 
 set -x
 
-EXP_DIR=two_stage/deformable-detr-baseline/50eps/r50_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage
+EXP_DIR=exps/two_stage/deformable-detr-baseline/50eps/r50_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage
 PY_ARGS=${@:1}
 
 python -u main.py \
