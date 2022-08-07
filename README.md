@@ -212,7 +212,7 @@ You can refer to [Deformable-DETR](https://github.com/fundamentalvision/Deformab
 * datasets/coco.py
 * datasets/\_\_init\_\_.py
 
-### To support Hybird-branch, tricks and checkpoint
+### To support Hybrid-branch, tricks and checkpoint
 * main.py
 * engine.py
 * models/deformable_detr.py
