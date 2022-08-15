@@ -4,16 +4,7 @@ This is the official implementation of the paper "[DETRs with Hybrid Matching](h
 
 Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei Sun, Chao Zhang, Han Hu
 
-## Citing H-Deformable-DETR
-If you find H-Deformable-DETR useful in your research, please consider citing:
-```bibtex
-@article{jia2022detrs,
-  title={DETRs with Hybrid Matching},
-  author={Jia, Ding and Yuan, Yuhui and He, Haodi and Wu, Xiaopei and Yu, Haojun and Lin, Weihong and Sun, Lei and Zhang, Chao and Hu, Han},
-  journal={arXiv preprint arXiv:2207.13080},
-  year={2022}
-}
-```
+
 ## Model ZOO
 
 We provide a set of baseline results and trained models available for download:
@@ -274,7 +265,7 @@ You can refer to [Deformable-DETR](https://github.com/fundamentalvision/Deformab
 * datasets/coco.py
 * datasets/\_\_init\_\_.py
 
-### To support Hybird-branch, tricks and checkpoint
+### To support Hybrid-branch, tricks and checkpoint
 * main.py
 * engine.py
 * models/deformable_detr.py
@@ -293,3 +284,23 @@ You can refer to [Deformable-DETR](https://github.com/fundamentalvision/Deformab
 * mmdet: for swin backbones
 * mmcv: for swin backbones
 * timm: for swin backbones
+
+
+## Citing H-Deformable-DETR
+If you find H-Deformable-DETR useful in your research, please consider citing:
+
+```bibtex
+@article{jia2022detrs,
+  title={DETRs with Hybrid Matching},
+  author={Jia, Ding and Yuan, Yuhui and He, Haodi and Wu, Xiaopei and Yu, Haojun and Lin, Weihong and Sun, Lei and Zhang, Chao and Hu, Han},
+  journal={arXiv preprint arXiv:2207.13080},
+  year={2022}
+}
+
+@article{zhu2020deformable,
+  title={Deformable detr: Deformable transformers for end-to-end object detection},
+  author={Zhu, Xizhou and Su, Weijie and Lu, Lewei and Li, Bin and Wang, Xiaogang and Dai, Jifeng},
+  journal={arXiv preprint arXiv:2010.04159},
+  year={2020}
+}
+```
