@@ -186,6 +186,13 @@ We provide a set of baseline results and trained models available for download:
 <td align="center">57.4</td>
 <td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
 </tr>
+ <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks [topk=300]</a></td>
+<td align="center">Swin Large</td>
+<td align="center">900</td>
+<td align="center">36</td>
+<td align="center">57.6</td>
+<td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
+</tr>
 </tbody></table>
 
 ## Installation
