@@ -4,6 +4,10 @@ This is the official implementation of the paper "[DETRs with Hybrid Matching](h
 
 Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei Sun, Chao Zhang, Han Hu
 
+## News
+
+**2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d**) is released. We will also release the support for both instance segmentation and panoptic segmentation soon.
+
 
 ## Model ZOO
 
