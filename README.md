@@ -6,7 +6,7 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ## News
 
-**2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d**) is released. We will also release the support for both instance segmentation and panoptic segmentation soon.
+**2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d**) is released. We will also release the code for [H-Mask-Deformable-DETR]() soon (**strong results on both instance segmentation and panoptic segmentation**).
 
 
 ## Model ZOO
