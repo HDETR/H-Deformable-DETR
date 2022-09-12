@@ -199,7 +199,7 @@ We provide a set of baseline results and trained models available for download:
 </tr>
 </tbody></table>
 
-### Improved H-Deformable DETR experiments
+### Improving H-Deformable-DETR with weight decay 0.05
 
 <table><tbody>
 <!-- START TABLE -->
@@ -212,7 +212,7 @@ We provide a set of baseline results and trained models available for download:
 <th valign="bottom">AP</th>
 <th valign="bottom">download</th>
 <!-- TABLE BODY -->
-<tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/12eps/swin/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks + weight decay 0.05</a></td>
+<tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/12eps/swin/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks</a></td>
 <td align="center">Swin Tiny</td>
 <td align="center">300</td>
 <td align="center">12</td>
@@ -221,7 +221,7 @@ We provide a set of baseline results and trained models available for download:
 <td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_12eps.pth">model</a></td>
 </tr>
 </tr>
- <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks + weight decay 0.05</a></td>
+ <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks</a></td>
 <td align="center">Swin Tiny</td>
 <td align="center">300</td>
 <td align="center">36</td>
@@ -230,13 +230,29 @@ We provide a set of baseline results and trained models available for download:
 <td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
 </tr>
 </tr>
- <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks + weight decay 0.05</a></td>
+ <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks</a></td>
 <td align="center">Swin Large</td>
 <td align="center">900</td>
 <td align="center">36</td>
 <td align="center">57.4</td>
 <td align="center">57.8</td>
 <td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
+</tr>
+ <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/36eps/swin/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks [topk=300]</a></td>
+<td align="center">Swin Large</td>
+<td align="center">900</td>
+<td align="center">36</td>
+<td align="center">57.6</td>
+<td align="center">57.9</td>
+<td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
+</tr>
+ <tr><td align="left"><a href="">H-Deformable-DETR + tricks [topk=300] + deeper-encoder </a></td>
+<td align="center">Swin Large</td>
+<td align="center">900</td>
+<td align="center">36</td>
+<td align="center">NA</td>
+<td align="center">58.2</td>
+<td align="center"><a href="h">model</a></td>
 </tr>
 </tbody></table>
 
