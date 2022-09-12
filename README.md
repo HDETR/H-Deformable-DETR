@@ -210,8 +210,8 @@ We provide a set of baseline results and trained models available for download:
 <th valign="bottom">Backbone</th>
 <th valign="bottom">query</th>
 <th valign="bottom">epochs</th>
-<th valign="bottom">original AP</th>
-<th valign="bottom">AP</th>
+<th valign="bottom">AP (weight-decay=0.0001)</th>
+<th valign="bottom">AP (weight-decay=0.05</th>
 <th valign="bottom">download</th>
 <!-- TABLE BODY -->
 <tr><td align="left"><a href="configs/two_stage/deformable-detr-hybrid-branch/12eps/swin/decay0.05_swin_tiny_hybrid_branch_lambda1_group6_t1500_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh">H-Deformable-DETR + tricks</a></td>
@@ -248,7 +248,7 @@ We provide a set of baseline results and trained models available for download:
 <td align="center">57.9</td>
 <td align="center"><a href="https://github.com/HDETR/H-Deformable-DETR/releases/download/v0.1/decay0.05_drop_path0.5_swin_large_hybrid_branch_lambda1_group6_t1500_n900_dp0_mqs_lft_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage_36eps.pth">model</a></td>
 </tr>
- <tr><td align="left"><a href="">H-Deformable-DETR + tricks [topk=300] + deeper-encoder </a></td>
+ <tr><td align="left"><a href="">H-Deformable-DETR<sup>deep-encoder</sup> + tricks [topk=300]</a></td>
 <td align="center">Swin Large</td>
 <td align="center">900</td>
 <td align="center">36</td>
