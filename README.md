@@ -10,7 +10,7 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 **2022.09.14** We have supported [H-Deformable-DETR w/ ViT-L (MAE)](https://github.com/kxqt/H-Deformable-DETR#model-zoo), which achieves **56.5** AP on COCO val with **4-scale feature maps** without using LSJ (large scale jittering) adopted by the original [ViT-Det](https://github.com/facebookresearch/detectron2/blob/main/projects/ViTDet/configs/common/coco_loader_lsj.py). We will include the results of [H-Deformable-DETR w/ ViT-L (MAE) + LSJ](https://github.com/kxqt/H-Deformable-DETR#model-zoo) equipped with LSJ soon. 🍺 credits to [Weicong Liang](https://github.com/kxqt)🍺
 
 
-**2022.09.12** Our [H-Deformable-DETR w/ Swin-L]() achieves **58.2** AP on COCO val with **4-scale feature maps**, thus achieving comparable (slightly better) results then the very recent [DINO-DETR w/ Swin-L](https://github.com/IDEACVR/DINO#36-epoch-setting) equipped with **4-scale feature maps**.
+**2022.09.12** Our [H-Deformable-DETR w/ Swin-L]() achieves **58.2** AP on COCO val with **4-scale feature maps**, thus achieving comparable (slightly better) results than the very recent [DINO-DETR w/ Swin-L](https://github.com/IDEACVR/DINO#36-epoch-setting) equipped with **4-scale feature maps**.
 
 **2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d** 🍺 credits to [Yiduo Hao](https://github.com/david-yd-hao) 🍺) is released. We will also release the code for [H-Mask-Deformable-DETR](https://github.com/HDETR/H-Mask-Deformable-DETR) soon (**strong results on both instance segmentation and panoptic segmentation**).
 
