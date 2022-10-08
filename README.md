@@ -6,6 +6,7 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ## News
 
+**2022.10.08** ⛽⛽⛽ [MSRA-VC-Group] is hiring research interns to push the frontier cutting-edge technology of object detection and segmentation.⛽⛽⛽ Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com)
 
 **2022.09.14** We have supported [H-Deformable-DETR w/ ViT-L (MAE)](https://github.com/kxqt/H-Deformable-DETR#model-zoo), which achieves **56.5** AP on COCO val with **4-scale feature maps** without using LSJ (large scale jittering) adopted by the original [ViT-Det](https://github.com/facebookresearch/detectron2/blob/main/projects/ViTDet/configs/common/coco_loader_lsj.py). We will include the results of [H-Deformable-DETR w/ ViT-L (MAE) + LSJ](https://github.com/kxqt/H-Deformable-DETR#model-zoo) equipped with LSJ soon. 🍺 credits to [Weicong Liang](https://github.com/kxqt)🍺
 
