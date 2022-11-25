@@ -8,6 +8,8 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ⛽⛽ [MSRA-VC-Group] is hiring research interns to push the frontier cutting-edge technology of object detection and segmentation.⛽ ⛽Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com)
 
+**2022.11.25** Optimized implementation for hybrid matching is released at [pull-request](https://github.com/HDETR/H-Deformable-DETR/pull/12), which parallelizes the matching/loss computations of one2one branch and one2many branch. 🍺🍺🍺 credits to [Ding Jia](https://github.com/JiaDingCN) 🍺🍺🍺
+
 **2022.11.17** Code for [H-Detic-LVIS](https://github.com/HDETR/H-Detic-LVIS) is released. 🍺🍺🍺 credits to [Haodi He](https://github.com/hardyho) 🍺🍺🍺
 
 **2022.11.10** Code for [H-TransTrack](https://github.com/HDETR/H-TransTrack) is released. 🍺🍺🍺 credits to [Haojun Yu](https://github.com/HaojunYuPKU) 🍺🍺🍺
