@@ -121,7 +121,7 @@ class ConvertCocoPolysToMask(object):
 
         target = {}
         target["boxes"] = boxes
-        target["labels"] = classes
+        target["labels"] = classes - 1
         if self.return_masks:
             target["masks"] = masks
         target["image_id"] = image_id
@@ -169,7 +169,12 @@ def make_coco_transforms(image_set):
         )
 
     if image_set == "val":
-        return T.Compose([T.RandomResize([800], max_size=1333), normalize,])
+        return T.Compose(
+            [
+                T.RandomResize([800], max_size=1333),
+                normalize,
+            ]
+        )
 
     raise ValueError(f"unknown {image_set}")
 
@@ -179,8 +184,8 @@ def build(image_set, args, eval_in_training_set):
     assert root.exists(), f"provided COCO path {root} does not exist"
     mode = "instances"
     PATHS = {
-        "train": (root / "train2017", root / "annotations" / f"{mode}_train2017.json"),
-        "val": (root / "val2017", root / "annotations" / f"{mode}_val2017.json"),
+        "train": (root / "train", root / "objects365v2_train_fixann.json"),
+        "val": (root / "val", root / "objects365v2_val.json"),
     }
 
     img_folder, ann_file = PATHS[image_set]
