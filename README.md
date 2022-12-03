@@ -307,14 +307,13 @@ cd ../..
 
 ## Data
 
-Please download [COCO 2017](https://cocodataset.org/) dataset and organize them as following:
+Please download [ObjectsO365](https://www.objects365.org/download.html) dataset and organize them as following:
 ```
 coco_path/
-  ├── train2017/
-  ├── val2017/
-  └── annotations/
-  	├── instances_train2017.json
-  	└── instances_val2017.json
+  ├── train/
+  ├── val/
+  ├── objects365v2_train_fixann.json
+  └── objects365v2_val.json
 ```
 ## Run
 ### To train a model using 8 cards
