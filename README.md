@@ -8,18 +8,20 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ⛽⛽ [MSRA-VC-Group] is hiring research interns to push the frontier cutting-edge technology of object detection and segmentation.⛽ ⛽Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com)
 
-**2022.11.17** Code for [H-Detic-LVIS](https://github.com/HDETR/H-Detic-LVIS) is released. 🍺🍺🍺 credits to [Haodi He](https://github.com/hardyho) 🍺🍺🍺
+**2022.11.25** Optimized implementation for hybrid matching is released at [pull-request](https://github.com/HDETR/H-Deformable-DETR/pull/12), which parallelizes the matching/loss computations of one2one branch and one2many branch. 🍺credits to [Ding Jia](https://github.com/JiaDingCN)🍺
 
-**2022.11.10** Code for [H-TransTrack](https://github.com/HDETR/H-TransTrack) is released. 🍺🍺🍺 credits to [Haojun Yu](https://github.com/HaojunYuPKU) 🍺🍺🍺
+**2022.11.17** Code for [H-Detic-LVIS](https://github.com/HDETR/H-Detic-LVIS) is released. 🍺credits to [Haodi He](https://github.com/hardyho)🍺
 
-**2022.10.20** 🎉🎉🎉[Detrex](https://github.com/IDEA-Research/detrex) have supported our [H-Deformable-DETR](https://github.com/IDEA-Research/detrex/blob/main/projects/h_deformable_detr/README.md) 🍺🍺🍺 credits to [Ding Jia](https://github.com/JiaDingCN) and [Tianhe Ren](https://github.com/rentainhe) 🍺🍺🍺
+**2022.11.10** Code for [H-TransTrack](https://github.com/HDETR/H-TransTrack) is released. 🍺credits to [Haojun Yu](https://github.com/HaojunYuPKU)🍺
 
-**2022.09.14** We have supported [H-Deformable-DETR w/ ViT-L (MAE)](https://github.com/kxqt/H-Deformable-DETR#model-zoo), which achieves **56.5** AP on COCO val with **4-scale feature maps** without using LSJ (large scale jittering) adopted by the original [ViT-Det](https://github.com/facebookresearch/detectron2/blob/main/projects/ViTDet/configs/common/coco_loader_lsj.py). We will include the results of [H-Deformable-DETR w/ ViT-L (MAE) + LSJ](https://github.com/kxqt/H-Deformable-DETR#model-zoo) equipped with LSJ soon. 🍺 credits to [Weicong Liang](https://github.com/kxqt)🍺
+**2022.10.20** 🎉🎉🎉[Detrex](https://github.com/IDEA-Research/detrex) have supported our [H-Deformable-DETR](https://github.com/IDEA-Research/detrex/blob/main/projects/h_deformable_detr/README.md) 🍺credits to [Ding Jia](https://github.com/JiaDingCN) and [Tianhe Ren](https://github.com/rentainhe)🍺
+
+**2022.09.14** We have supported [H-Deformable-DETR w/ ViT-L (MAE)](https://github.com/kxqt/H-Deformable-DETR#model-zoo), which achieves **56.5** AP on COCO val with **4-scale feature maps** without using LSJ (large scale jittering) adopted by the original [ViT-Det](https://github.com/facebookresearch/detectron2/blob/main/projects/ViTDet/configs/common/coco_loader_lsj.py). We will include the results of [H-Deformable-DETR w/ ViT-L (MAE) + LSJ](https://github.com/kxqt/H-Deformable-DETR#model-zoo) equipped with LSJ soon. 🍺credits to [Weicong Liang](https://github.com/kxqt)🍺
 
 
 **2022.09.12** Our [H-Deformable-DETR w/ Swin-L]() achieves **58.2** AP on COCO val with **4-scale feature maps**, thus achieving comparable (slightly better) results than the very recent [DINO-DETR w/ Swin-L](https://github.com/IDEACVR/DINO#36-epoch-setting) equipped with **4-scale feature maps**.
 
-**2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d** 🍺 credits to [Yiduo Hao](https://github.com/david-yd-hao) 🍺) is released. We will also release the code for [H-Mask-Deformable-DETR](https://github.com/HDETR/H-Mask-Deformable-DETR) soon (**strong results on both instance segmentation and panoptic segmentation**).
+**2022.08.31** Code for [H-Deformable-DETR-mmdet](https://github.com/HDETR/H-Deformable-DETR-mmdet) (**support mmdetection2d** 🍺credits to[Yiduo Hao](https://github.com/david-yd-hao)🍺) is released. We will also release the code for [H-Mask-Deformable-DETR](https://github.com/HDETR/H-Mask-Deformable-DETR) soon (**strong results on both instance segmentation and panoptic segmentation**).
 
 
 ## Model ZOO
