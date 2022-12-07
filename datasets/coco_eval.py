@@ -101,7 +101,7 @@ class CocoEvaluator(object):
                 [
                     {
                         "image_id": original_id,
-                        "category_id": labels[k],
+                        "category_id": labels[k] + 1,
                         "bbox": box,
                         "score": scores[k],
                     }

@@ -204,7 +204,7 @@ def get_args_parser():
 
     # dataset parameters
     parser.add_argument("--dataset_file", default="coco")
-    parser.add_argument("--coco_path", default="./data/coco", type=str)
+    parser.add_argument("--coco_path", default="./data/objects365_v2", type=str)
     parser.add_argument("--coco_panoptic_path", type=str)
     parser.add_argument("--remove_difficult", action="store_true")
 
@@ -269,12 +269,16 @@ def main(args):
     dataset_train = build_dataset(image_set="train", args=args)
     if not args.eval_in_training_set:
         dataset_val = build_dataset(
-            image_set="val", args=args, eval_in_training_set=False,
+            image_set="val",
+            args=args,
+            eval_in_training_set=False,
         )
     else:
         print("eval in the training set")
         dataset_val = build_dataset(
-            image_set="train", args=args, eval_in_training_set=True,
+            image_set="train",
+            args=args,
+            eval_in_training_set=True,
         )
 
     if args.distributed:
