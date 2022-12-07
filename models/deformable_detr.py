@@ -1,8 +1,4 @@
 # ------------------------------------------------------------------------
-# H-DETR
-# Copyright (c) 2022 Peking University & Microsoft Research Asia. All Rights Reserved.
-# Licensed under the MIT-style license found in the LICENSE file in the root directory
-# ------------------------------------------------------------------------
 # Deformable DETR
 # Copyright (c) 2020 SenseTime. All Rights Reserved.
 # Licensed under the Apache License, Version 2.0 [see LICENSE for details]
@@ -18,7 +14,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 import math
-
+import time
 from util import box_ops
 from util.misc import (
     NestedTensor,
@@ -461,24 +457,81 @@ class SetCriterion(nn.Module):
         assert loss in loss_map, f"do you really want to compute {loss} loss?"
         return loss_map[loss](outputs, targets, indices, num_boxes, **kwargs)
 
-    def forward(self, outputs, targets):
+    def forward(
+        self, outputs, targets, outputs_one2many=None, multi_targets=None, k_one2many=0
+    ):
         """ This performs the loss computation.
         Parameters:
              outputs: dict of tensors, see the output specification of the model for the format
              targets: list of dicts, such that len(targets) == batch_size.
                       The expected keys in each dict depends on the losses applied, see each loss' doc
         """
+        start = time.time()
+        matching_time = 0.0
+        assign_time = 0.0
+        whole_targets = copy.deepcopy(targets)
         outputs_without_aux = {
             k: v
             for k, v in outputs.items()
             if k != "aux_outputs" and k != "enc_outputs"
         }
 
-        # Retrieve the matching between the outputs of the last layer and the targets
-        indices = self.matcher(outputs_without_aux, targets)
+        num_one2one_queries = outputs_without_aux["pred_logits"].shape[1]
+
+        if outputs_one2many != None:
+            outputs["pred_logits"] = torch.cat(
+                [outputs["pred_logits"], outputs_one2many["pred_logits"]], dim=1
+            )
+            outputs["pred_boxes"] = torch.cat(
+                [outputs["pred_boxes"], outputs_one2many["pred_boxes"]], dim=1
+            )
+            # Retrieve the matching between the outputs of the last layer and the targets
+            indices, cur_match_time, cur_assign_time, cost_matrix = self.matcher(
+                outputs_without_aux, targets, full_outputs=outputs
+            )
+        else:
+            # Retrieve the matching between the outputs of the last layer and the targets
+            indices, cur_match_time, cur_assign_time, cost_matrix = self.matcher(
+                outputs_without_aux, targets
+            )
+        matching_time += cur_match_time
+        assign_time += cur_assign_time
+
+        if outputs_one2many != None:
+            outputs_without_aux_one2many = {
+                k: v
+                for k, v in outputs_one2many.items()
+                if k != "aux_outputs" and k != "enc_outputs"
+            }
+            indices_one2many, cur_match_time, cur_assign_time, _ = self.matcher(
+                outputs_without_aux_one2many,
+                multi_targets,
+                cost_matrix=cost_matrix,
+                k_one2many=k_one2many,
+                single_targets=targets,
+            )
+            matching_time += cur_match_time
+            assign_time += cur_assign_time
+
+            for b in range(len(targets)):
+                cur_gt_num = targets[b]["labels"].shape[0]
+
+                indices[b] = (
+                    torch.cat(
+                        [indices[b][0], indices_one2many[b][0] + num_one2one_queries]
+                    ),
+                    torch.cat([indices[b][1], indices_one2many[b][1] + cur_gt_num]),
+                )
+
+                whole_targets[b]["boxes"] = torch.cat(
+                    [targets[b]["boxes"], multi_targets[b]["boxes"]], dim=0
+                )
+                whole_targets[b]["labels"] = torch.cat(
+                    [targets[b]["labels"], multi_targets[b]["labels"]], dim=0
+                )
 
         # Compute the average number of target boxes accross all nodes, for normalization purposes
-        num_boxes = sum(len(t["labels"]) for t in targets)
+        num_boxes = sum(len(t["labels"]) for t in whole_targets)
         num_boxes = torch.as_tensor(
             [num_boxes], dtype=torch.float, device=next(iter(outputs.values())).device
         )
@@ -491,13 +544,72 @@ class SetCriterion(nn.Module):
         for loss in self.losses:
             kwargs = {}
             losses.update(
-                self.get_loss(loss, outputs, targets, indices, num_boxes, **kwargs)
+                self.get_loss(
+                    loss, outputs, whole_targets, indices, num_boxes, **kwargs
+                )
             )
 
         # In case of auxiliary losses, we repeat this process with the output of each intermediate layer.
         if "aux_outputs" in outputs:
             for i, aux_outputs in enumerate(outputs["aux_outputs"]):
-                indices = self.matcher(aux_outputs, targets)
+                if outputs_one2many != None:
+                    new_aux_outputs = dict()
+                    cur_one2many_aux_outputs = outputs_one2many["aux_outputs"][i]
+                    new_aux_outputs["pred_logits"] = torch.cat(
+                        [
+                            aux_outputs["pred_logits"],
+                            cur_one2many_aux_outputs["pred_logits"],
+                        ],
+                        dim=1,
+                    )
+                    new_aux_outputs["pred_boxes"] = torch.cat(
+                        [
+                            aux_outputs["pred_boxes"],
+                            cur_one2many_aux_outputs["pred_boxes"],
+                        ],
+                        dim=1,
+                    )
+
+                    (
+                        indices,
+                        cur_match_time,
+                        cur_assign_time,
+                        cost_matrix,
+                    ) = self.matcher(aux_outputs, targets, full_outputs=new_aux_outputs)
+                    aux_outputs = new_aux_outputs
+                else:
+                    (
+                        indices,
+                        cur_match_time,
+                        cur_assign_time,
+                        cost_matrix,
+                    ) = self.matcher(aux_outputs, targets)
+                matching_time += cur_match_time
+                assign_time += cur_assign_time
+                if outputs_one2many != None:
+                    indices_one2many, cur_match_time, cur_assign_time, _ = self.matcher(
+                        cur_one2many_aux_outputs,
+                        multi_targets,
+                        cost_matrix=cost_matrix,
+                        k_one2many=k_one2many,
+                        single_targets=targets,
+                    )
+                    matching_time += cur_match_time
+                    assign_time += cur_assign_time
+                    for b in range(len(targets)):
+                        cur_gt_num = targets[b]["labels"].shape[0]
+                        indices[b] = (
+                            torch.cat(
+                                [
+                                    indices[b][0],
+                                    indices_one2many[b][0] + num_one2one_queries,
+                                ]
+                            ),
+                            torch.cat(
+                                [indices[b][1], indices_one2many[b][1] + cur_gt_num]
+                            ),
+                        )
+
                 for loss in self.losses:
                     if loss == "masks":
                         # Intermediate masks losses are too costly to compute, we ignore them.
@@ -507,7 +619,7 @@ class SetCriterion(nn.Module):
                         # Logging is enabled only for the last layer
                         kwargs["log"] = False
                     l_dict = self.get_loss(
-                        loss, aux_outputs, targets, indices, num_boxes, **kwargs
+                        loss, aux_outputs, whole_targets, indices, num_boxes, **kwargs
                     )
                     l_dict = {k + f"_{i}": v for k, v in l_dict.items()}
                     losses.update(l_dict)
@@ -517,7 +629,11 @@ class SetCriterion(nn.Module):
             bin_targets = copy.deepcopy(targets)
             for bt in bin_targets:
                 bt["labels"] = torch.zeros_like(bt["labels"])
-            indices = self.matcher(enc_outputs, bin_targets)
+            indices, cur_match_time, cur_assign_time, _ = self.matcher(
+                enc_outputs, bin_targets
+            )
+            matching_time += cur_match_time
+            assign_time += cur_assign_time
             for loss in self.losses:
                 if loss == "masks":
                     # Intermediate masks losses are too costly to compute, we ignore them.
@@ -531,8 +647,8 @@ class SetCriterion(nn.Module):
                 )
                 l_dict = {k + f"_enc": v for k, v in l_dict.items()}
                 losses.update(l_dict)
-
-        return losses
+        end = time.time()
+        return losses, matching_time, assign_time, end - start
 
 
 class PostProcess(nn.Module):

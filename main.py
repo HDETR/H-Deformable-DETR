@@ -27,7 +27,7 @@ import datasets
 import util.misc as utils
 import datasets.samplers as samplers
 from datasets import build_dataset, get_coco_api_from_dataset
-from engine import evaluate, train_one_epoch
+from engine import evaluate, evaluate_mstest, train_one_epoch
 from models import build_model
 
 
@@ -240,6 +240,11 @@ def get_args_parser():
 
     # * logging technologies
     parser.add_argument("--use_wandb", action="store_true", default=False)
+
+    # mstest
+    parser.add_argument("--mstest", action="store_true", default=False)
+    parser.add_argument("--mstest-with-h-flip", action="store_true", default=False)
+    parser.add_argument("--vote_threshold", default=0.66, type=float)
     return parser
 
 
@@ -269,12 +274,12 @@ def main(args):
     dataset_train = build_dataset(image_set="train", args=args)
     if not args.eval_in_training_set:
         dataset_val = build_dataset(
-            image_set="val", args=args, eval_in_training_set=False,
+            image_set="val", args=args, eval_in_training_set=False, mstest=args.mstest
         )
     else:
         print("eval in the training set")
         dataset_val = build_dataset(
-            image_set="train", args=args, eval_in_training_set=True,
+            image_set="train", args=args, eval_in_training_set=True, mstest=args.mstest
         )
 
     if args.distributed:
@@ -435,16 +440,60 @@ def main(args):
             )
 
     if args.eval:
-        test_stats, coco_evaluator = evaluate(
-            model,
-            criterion,
-            postprocessors,
-            data_loader_val,
-            base_ds,
-            device,
-            args.output_dir,
-            use_wandb=args.use_wandb,
-        )
+        if args.mstest:
+            test_stats, coco_evaluator = evaluate_mstest(
+                model,
+                criterion,
+                postprocessors,
+                data_loader_val,
+                base_ds,
+                device,
+                args.output_dir,
+                use_wandb=args.use_wandb,
+                scales=(
+                    400,
+                    500,
+                    600,
+                    640,
+                    700,
+                    900,
+                    1000,
+                    1100,
+                    1200,
+                    1300,
+                    1400,
+                    1800,
+                ),
+                scale_ranges=[
+                    [96, 10000],
+                    [96, 10000],
+                    [64, 10000],
+                    [64, 10000],
+                    [64, 10000],
+                    [0, 10000],
+                    [0, 10000],
+                    [0, 256],
+                    [0, 256],
+                    [0, 192],
+                    [0, 192],
+                    [0, 96],
+                ],
+                max_size=3000,
+                topk=args.topk,
+                mstest_with_h_flip=args.mstest_with_h_flip,
+                vote_threshold=args.vote_threshold,
+            )
+        else:
+            test_stats, coco_evaluator = evaluate(
+                model,
+                criterion,
+                postprocessors,
+                data_loader_val,
+                base_ds,
+                device,
+                args.output_dir,
+                use_wandb=args.use_wandb,
+            )
         if args.output_dir:
             utils.save_on_master(
                 coco_evaluator.coco_eval["bbox"].eval, output_dir / "eval.pth"
