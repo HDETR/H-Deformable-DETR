@@ -387,3 +387,10 @@ If you find H-Deformable-DETR useful in your research, please consider citing:
   year={2020}
 }
 ```
+
+[![Stargazers repo roster for @HDETR/H-Deformable-DETR](https://reporoster.com/stars/HDETR/H-Deformable-DETR)](https://github.com/HDETR/H-Deformable-DETR/stargazers)
+
+[![Forkers repo roster for @HDETR/H-Deformable-DETR](https://reporoster.com/forks/HDETR/H-Deformable-DETR)](https://github.com/HDETR/H-Deformable-DETR/network/members)
+
+[![Star History Chart](https://api.star-history.com/svg?repos=HDETR/H-Deformable-DETR&type=Date)](https://star-history.com/#HDETR/H-Deformable-DETR&Date)
+
