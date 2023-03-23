@@ -8,6 +8,8 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ⛽ ⛽ ⛽ Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com)
 
+**2023.03.22** [Expedit-LargeScale-Vision-Transformer (NeurIPS2022)](https://github.com/Expedit-LargeScale-Vision-Transformer?view_as=public) has been open-sourced.
+
 **2023.02.28** HDETR has been accepted by CVPR 2023 😉😉😉
 
 **2022.11.25** Optimized implementation for hybrid matching is released at [pull-request](https://github.com/HDETR/H-Deformable-DETR/pull/12), which parallelizes the matching/loss computations of one2one branch and one2many branch. 🍺credits to [Ding Jia](https://github.com/JiaDingCN)🍺
