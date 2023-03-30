@@ -6,7 +6,10 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ## News
 
-⛽ ⛽ ⛽ Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com)
+⛽ ⛽ ⛽ Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com) 
+
+
+**2023.03.29** [HDETR+R50 based on Detrex](https://github.com/IDEA-Research/detrex/blob/main/projects/h_deformable_detr/README.md#pretrained-models) achieves better performance: AP=49.1 under 12x training epochs. Thanks to [Tianhe Ren](https://github.com/rentainhe)🍺
 
 **2023.03.22** [Expedit-LargeScale-Vision-Transformer (NeurIPS2022)](https://github.com/Expedit-LargeScale-Vision-Transformer?view_as=public) has been open-sourced.
 
