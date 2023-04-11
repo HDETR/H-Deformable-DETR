@@ -8,7 +8,7 @@ Authors: Ding Jia, Yuhui Yuan, Haodi He, Xiaopei Wu, Haojun Yu, Weihong Lin, Lei
 
 ⛽ ⛽ ⛽ Contact: [yuhui.yuan@microsoft.com](yuhui.yuan@microsoft.com) 
 
-**2023.04.11** [Swin-L+H-Deformable-DETR + SAM](https://github.com/RockeyCoss/Instance-Segment-Anything/blob/master/projects/configs/hdetr/swin-l-hdetr_sam-vit-h.py) achieves strong COCO instance segmentation results: mask AP=46.8 by simply prompting SAM with our HDETR box predictions. (mask AP=46.5 based on ViTDet) Thanks to [Zhanhao Liang]([https://github.com/rentainhe](https://github.com/RockeyCoss))🍺🍺🍺
+**2023.04.11** [Swin-L+H-Deformable-DETR + SAM](https://github.com/RockeyCoss/Instance-Segment-Anything/blob/master/projects/configs/hdetr/swin-l-hdetr_sam-vit-h.py) achieves strong COCO instance segmentation results: mask AP=46.8 by simply prompting SAM with our HDETR box predictions. (mask AP=46.5 based on ViTDet) Thanks to [Zhanhao Liang](https://github.com/RockeyCoss)🍺🍺🍺
 
 **2023.03.29** [HDETR+R50 based on Detrex](https://github.com/IDEA-Research/detrex/blob/main/projects/h_deformable_detr/README.md#pretrained-models) achieves better performance: AP=49.1 under 12x training epochs. Thanks to [Tianhe Ren](https://github.com/rentainhe)🍺
 
