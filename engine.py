@@ -1,3 +1,4 @@
+
 # ------------------------------------------------------------------------
 # H-DETR
 # Copyright (c) 2022 Peking University & Microsoft Research Asia. All Rights Reserved.
@@ -26,13 +27,12 @@ import util.misc as utils
 from datasets.coco_eval import CocoEvaluator
 from datasets.panoptic_eval import PanopticEvaluator
 from datasets.data_prefetcher import data_prefetcher
+import time
 
 scaler = torch.cuda.amp.GradScaler()
 
 
 def train_hybrid(outputs, targets, k_one2many, criterion, lambda_one2many):
-    # one-to-one-loss
-    loss_dict = criterion(outputs, targets)
     multi_targets = copy.deepcopy(targets)
     # repeat the targets
     for target in multi_targets:
@@ -44,14 +44,20 @@ def train_hybrid(outputs, targets, k_one2many, criterion, lambda_one2many):
     outputs_one2many["pred_boxes"] = outputs["pred_boxes_one2many"]
     outputs_one2many["aux_outputs"] = outputs["aux_outputs_one2many"]
 
-    # one-to-many loss
-    loss_dict_one2many = criterion(outputs_one2many, multi_targets)
-    for key, value in loss_dict_one2many.items():
-        if key + "_one2many" in loss_dict.keys():
-            loss_dict[key + "_one2many"] += value * lambda_one2many
-        else:
-            loss_dict[key + "_one2many"] = value * lambda_one2many
-    return loss_dict
+    # one-to-one first
+    (loss_dict, matching_time, assign_time, loss_time,) = criterion(
+        outputs=outputs,
+        targets=targets,
+        outputs_one2many=outputs_one2many,
+        multi_targets=multi_targets,
+        k_one2many=k_one2many,
+    )
+    return (
+        loss_dict,
+        matching_time,
+        assign_time,
+        loss_time,
+    )
 
 
 def train_one_epoch(
@@ -83,6 +89,11 @@ def train_one_epoch(
     prefetcher = data_prefetcher(data_loader, device, prefetch=True)
     samples, targets = prefetcher.next()
 
+    time_for_matching = 0.0
+    time_for_assign = 0.0
+    time_for_loss = 0.0
+
+    start_time = time.time()
     # for samples, targets in metric_logger.log_every(data_loader, print_freq, header):
     for _ in metric_logger.log_every(range(len(data_loader)), print_freq, header):
         with torch.cuda.amp.autocast() if use_fp16 else torch.cuda.amp.autocast(
@@ -93,11 +104,16 @@ def train_one_epoch(
             outputs = model(samples)
 
             if k_one2many > 0:
-                loss_dict = train_hybrid(
+                loss_dict, matching_time, assign_time, loss_time = train_hybrid(
                     outputs, targets, k_one2many, criterion, lambda_one2many
                 )
             else:
-                loss_dict = criterion(outputs, targets)
+                loss_dict, matching_time, assign_time, loss_time = criterion(
+                    outputs, targets, k_one2many=0
+                )
+            time_for_matching += matching_time
+            time_for_assign += assign_time
+            time_for_loss += loss_time
         weight_dict = criterion.weight_dict
         losses = sum(
             loss_dict[k] * weight_dict[k] for k in loss_dict.keys() if k in weight_dict
@@ -133,7 +149,7 @@ def train_one_epoch(
                 model.parameters(), max_norm
             )
         else:
-            grad_total_norm = utils.get_total_grad_norm(model.parameters(), max_norm)
+            grad_total_norm = utils.get_total_grad_norm(model.parameters())
 
         if use_fp16:
             scaler.step(optimizer)
@@ -155,6 +171,12 @@ def train_one_epoch(
                 wandb.log(loss_dict)
             except:
                 pass
+    end_time = time.time()
+    total_time_cost = end_time - start_time
+    print("total time cost for an epoch is:", total_time_cost)
+    print("time for matching part for an epoch is:", time_for_matching)
+    print("time for linear assign part for an epoch is:", time_for_assign)
+    print("time for loss part for an epoch is:", time_for_loss)
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
     print("Averaged stats:", metric_logger)
@@ -205,7 +227,9 @@ def evaluate(
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
         outputs = model(samples)
-        loss_dict = criterion(outputs, targets)
+        loss_dict, eval_matching_time, eval_assign_time, eval_loss_time = criterion(
+            outputs, targets, k_one2many=0
+        )
         weight_dict = criterion.weight_dict
 
         # reduce losses over all GPUs for logging purposes

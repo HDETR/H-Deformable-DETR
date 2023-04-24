@@ -1,8 +1,4 @@
 # ------------------------------------------------------------------------
-# H-DETR
-# Copyright (c) 2022 Peking University & Microsoft Research Asia. All Rights Reserved.
-# Licensed under the MIT-style license found in the LICENSE file in the root directory
-# ------------------------------------------------------------------------
 # Deformable DETR
 # Copyright (c) 2020 SenseTime. All Rights Reserved.
 # Licensed under the Apache License, Version 2.0 [see LICENSE for details]
@@ -18,7 +14,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 import math
-
+import time
 from util import box_ops
 from util.misc import (
     NestedTensor,
@@ -48,7 +44,7 @@ def _get_clones(module, N):
 
 
 class DeformableDETR(nn.Module):
-    """ This is the Deformable DETR module that performs object detection """
+    """This is the Deformable DETR module that performs object detection"""
 
     def __init__(
         self,
@@ -63,7 +59,7 @@ class DeformableDETR(nn.Module):
         num_queries_one2many=0,
         mixed_selection=False,
     ):
-        """ Initializes the model.
+        """Initializes the model.
         Parameters:
             backbone: torch module of the backbone to be used. See backbone.py
             transformer: torch module of the transformer architecture. See transformer.py
@@ -161,19 +157,19 @@ class DeformableDETR(nn.Module):
         self.mixed_selection = mixed_selection
 
     def forward(self, samples: NestedTensor):
-        """ The forward expects a NestedTensor, which consists of:
-               - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
-               - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
+        """The forward expects a NestedTensor, which consists of:
+           - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
+           - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
 
-            It returns a dict with the following elements:
-               - "pred_logits": the classification logits (including no-object) for all queries.
-                                Shape= [batch_size x num_queries x (num_classes + 1)]
-               - "pred_boxes": The normalized boxes coordinates for all queries, represented as
-                               (center_x, center_y, height, width). These values are normalized in [0, 1],
-                               relative to the size of each individual image (disregarding possible padding).
-                               See PostProcess for information on how to retrieve the unnormalized bounding box.
-               - "aux_outputs": Optional, only returned when auxilary losses are activated. It is a list of
-                                dictionnaries containing the two above keys for each decoder layer.
+        It returns a dict with the following elements:
+           - "pred_logits": the classification logits (including no-object) for all queries.
+                            Shape= [batch_size x num_queries x (num_classes + 1)]
+           - "pred_boxes": The normalized boxes coordinates for all queries, represented as
+                           (center_x, center_y, height, width). These values are normalized in [0, 1],
+                           relative to the size of each individual image (disregarding possible padding).
+                           See PostProcess for information on how to retrieve the unnormalized bounding box.
+           - "aux_outputs": Optional, only returned when auxilary losses are activated. It is a list of
+                            dictionnaries containing the two above keys for each decoder layer.
         """
         if not isinstance(samples, NestedTensor):
             samples = nested_tensor_from_tensor_list(samples)
@@ -210,10 +206,23 @@ class DeformableDETR(nn.Module):
         """ attention mask to prevent information leakage
         """
         self_attn_mask = (
-            torch.zeros([self.num_queries, self.num_queries,]).bool().to(src.device)
+            torch.zeros(
+                [
+                    self.num_queries,
+                    self.num_queries,
+                ]
+            )
+            .bool()
+            .to(src.device)
         )
-        self_attn_mask[self.num_queries_one2one :, 0 : self.num_queries_one2one,] = True
-        self_attn_mask[0 : self.num_queries_one2one, self.num_queries_one2one :,] = True
+        self_attn_mask[
+            self.num_queries_one2one :,
+            0 : self.num_queries_one2one,
+        ] = True
+        self_attn_mask[
+            0 : self.num_queries_one2one,
+            self.num_queries_one2one :,
+        ] = True
 
         (
             hs,
@@ -291,14 +300,14 @@ class DeformableDETR(nn.Module):
 
 
 class SetCriterion(nn.Module):
-    """ This class computes the loss for DETR.
+    """This class computes the loss for DETR.
     The process happens in two steps:
         1) we compute hungarian assignment between ground truth boxes and the outputs of the model
         2) we supervise each pair of matched ground-truth / prediction (supervise class and box)
     """
 
     def __init__(self, num_classes, matcher, weight_dict, losses, focal_alpha=0.25):
-        """ Create the criterion.
+        """Create the criterion.
         Parameters:
             num_classes: number of object categories, omitting the special no-object category
             matcher: module able to compute a matching between targets and proposals
@@ -360,7 +369,7 @@ class SetCriterion(nn.Module):
 
     @torch.no_grad()
     def loss_cardinality(self, outputs, targets, indices, num_boxes):
-        """ Compute the cardinality error, ie the absolute error in the number of predicted non-empty boxes
+        """Compute the cardinality error, ie the absolute error in the number of predicted non-empty boxes
         This is not really a loss, it is intended for logging purposes only. It doesn't propagate gradients
         """
         pred_logits = outputs["pred_logits"]
@@ -376,8 +385,8 @@ class SetCriterion(nn.Module):
 
     def loss_boxes(self, outputs, targets, indices, num_boxes):
         """Compute the losses related to the bounding boxes, the L1 regression loss and the GIoU loss
-           targets dicts must contain the key "boxes" containing a tensor of dim [nb_target_boxes, 4]
-           The target boxes are expected in format (center_x, center_y, h, w), normalized by the image size.
+        targets dicts must contain the key "boxes" containing a tensor of dim [nb_target_boxes, 4]
+        The target boxes are expected in format (center_x, center_y, h, w), normalized by the image size.
         """
         assert "pred_boxes" in outputs
         idx = self._get_src_permutation_idx(indices)
@@ -402,7 +411,7 @@ class SetCriterion(nn.Module):
 
     def loss_masks(self, outputs, targets, indices, num_boxes):
         """Compute the losses related to the masks: the focal loss and the dice loss.
-           targets dicts must contain the key "masks" containing a tensor of dim [nb_target_boxes, h, w]
+        targets dicts must contain the key "masks" containing a tensor of dim [nb_target_boxes, h, w]
         """
         assert "pred_masks" in outputs
 
@@ -461,24 +470,81 @@ class SetCriterion(nn.Module):
         assert loss in loss_map, f"do you really want to compute {loss} loss?"
         return loss_map[loss](outputs, targets, indices, num_boxes, **kwargs)
 
-    def forward(self, outputs, targets):
-        """ This performs the loss computation.
+    def forward(
+        self, outputs, targets, outputs_one2many=None, multi_targets=None, k_one2many=0
+    ):
+        """This performs the loss computation.
         Parameters:
              outputs: dict of tensors, see the output specification of the model for the format
              targets: list of dicts, such that len(targets) == batch_size.
                       The expected keys in each dict depends on the losses applied, see each loss' doc
         """
+        start = time.time()
+        matching_time = 0.0
+        assign_time = 0.0
+        whole_targets = copy.deepcopy(targets)
         outputs_without_aux = {
             k: v
             for k, v in outputs.items()
             if k != "aux_outputs" and k != "enc_outputs"
         }
 
-        # Retrieve the matching between the outputs of the last layer and the targets
-        indices = self.matcher(outputs_without_aux, targets)
+        num_one2one_queries = outputs_without_aux["pred_logits"].shape[1]
+
+        if outputs_one2many != None:
+            outputs["pred_logits"] = torch.cat(
+                [outputs["pred_logits"], outputs_one2many["pred_logits"]], dim=1
+            )
+            outputs["pred_boxes"] = torch.cat(
+                [outputs["pred_boxes"], outputs_one2many["pred_boxes"]], dim=1
+            )
+            # Retrieve the matching between the outputs of the last layer and the targets
+            indices, cur_match_time, cur_assign_time, cost_matrix = self.matcher(
+                outputs_without_aux, targets, full_outputs=outputs
+            )
+        else:
+            # Retrieve the matching between the outputs of the last layer and the targets
+            indices, cur_match_time, cur_assign_time, cost_matrix = self.matcher(
+                outputs_without_aux, targets
+            )
+        matching_time += cur_match_time
+        assign_time += cur_assign_time
+
+        if outputs_one2many != None:
+            outputs_without_aux_one2many = {
+                k: v
+                for k, v in outputs_one2many.items()
+                if k != "aux_outputs" and k != "enc_outputs"
+            }
+            indices_one2many, cur_match_time, cur_assign_time, _ = self.matcher(
+                outputs_without_aux_one2many,
+                multi_targets,
+                cost_matrix=cost_matrix,
+                k_one2many=k_one2many,
+                single_targets=targets,
+            )
+            matching_time += cur_match_time
+            assign_time += cur_assign_time
+
+            for b in range(len(targets)):
+                cur_gt_num = targets[b]["labels"].shape[0]
+
+                indices[b] = (
+                    torch.cat(
+                        [indices[b][0], indices_one2many[b][0] + num_one2one_queries]
+                    ),
+                    torch.cat([indices[b][1], indices_one2many[b][1] + cur_gt_num]),
+                )
+
+                whole_targets[b]["boxes"] = torch.cat(
+                    [targets[b]["boxes"], multi_targets[b]["boxes"]], dim=0
+                )
+                whole_targets[b]["labels"] = torch.cat(
+                    [targets[b]["labels"], multi_targets[b]["labels"]], dim=0
+                )
 
         # Compute the average number of target boxes accross all nodes, for normalization purposes
-        num_boxes = sum(len(t["labels"]) for t in targets)
+        num_boxes = sum(len(t["labels"]) for t in whole_targets)
         num_boxes = torch.as_tensor(
             [num_boxes], dtype=torch.float, device=next(iter(outputs.values())).device
         )
@@ -491,13 +557,72 @@ class SetCriterion(nn.Module):
         for loss in self.losses:
             kwargs = {}
             losses.update(
-                self.get_loss(loss, outputs, targets, indices, num_boxes, **kwargs)
+                self.get_loss(
+                    loss, outputs, whole_targets, indices, num_boxes, **kwargs
+                )
             )
 
         # In case of auxiliary losses, we repeat this process with the output of each intermediate layer.
         if "aux_outputs" in outputs:
             for i, aux_outputs in enumerate(outputs["aux_outputs"]):
-                indices = self.matcher(aux_outputs, targets)
+                if outputs_one2many != None:
+                    new_aux_outputs = dict()
+                    cur_one2many_aux_outputs = outputs_one2many["aux_outputs"][i]
+                    new_aux_outputs["pred_logits"] = torch.cat(
+                        [
+                            aux_outputs["pred_logits"],
+                            cur_one2many_aux_outputs["pred_logits"],
+                        ],
+                        dim=1,
+                    )
+                    new_aux_outputs["pred_boxes"] = torch.cat(
+                        [
+                            aux_outputs["pred_boxes"],
+                            cur_one2many_aux_outputs["pred_boxes"],
+                        ],
+                        dim=1,
+                    )
+
+                    (
+                        indices,
+                        cur_match_time,
+                        cur_assign_time,
+                        cost_matrix,
+                    ) = self.matcher(aux_outputs, targets, full_outputs=new_aux_outputs)
+                    aux_outputs = new_aux_outputs
+                else:
+                    (
+                        indices,
+                        cur_match_time,
+                        cur_assign_time,
+                        cost_matrix,
+                    ) = self.matcher(aux_outputs, targets)
+                matching_time += cur_match_time
+                assign_time += cur_assign_time
+                if outputs_one2many != None:
+                    indices_one2many, cur_match_time, cur_assign_time, _ = self.matcher(
+                        cur_one2many_aux_outputs,
+                        multi_targets,
+                        cost_matrix=cost_matrix,
+                        k_one2many=k_one2many,
+                        single_targets=targets,
+                    )
+                    matching_time += cur_match_time
+                    assign_time += cur_assign_time
+                    for b in range(len(targets)):
+                        cur_gt_num = targets[b]["labels"].shape[0]
+                        indices[b] = (
+                            torch.cat(
+                                [
+                                    indices[b][0],
+                                    indices_one2many[b][0] + num_one2one_queries,
+                                ]
+                            ),
+                            torch.cat(
+                                [indices[b][1], indices_one2many[b][1] + cur_gt_num]
+                            ),
+                        )
+
                 for loss in self.losses:
                     if loss == "masks":
                         # Intermediate masks losses are too costly to compute, we ignore them.
@@ -507,7 +632,7 @@ class SetCriterion(nn.Module):
                         # Logging is enabled only for the last layer
                         kwargs["log"] = False
                     l_dict = self.get_loss(
-                        loss, aux_outputs, targets, indices, num_boxes, **kwargs
+                        loss, aux_outputs, whole_targets, indices, num_boxes, **kwargs
                     )
                     l_dict = {k + f"_{i}": v for k, v in l_dict.items()}
                     losses.update(l_dict)
@@ -517,7 +642,11 @@ class SetCriterion(nn.Module):
             bin_targets = copy.deepcopy(targets)
             for bt in bin_targets:
                 bt["labels"] = torch.zeros_like(bt["labels"])
-            indices = self.matcher(enc_outputs, bin_targets)
+            indices, cur_match_time, cur_assign_time, _ = self.matcher(
+                enc_outputs, bin_targets
+            )
+            matching_time += cur_match_time
+            assign_time += cur_assign_time
             for loss in self.losses:
                 if loss == "masks":
                     # Intermediate masks losses are too costly to compute, we ignore them.
@@ -531,12 +660,12 @@ class SetCriterion(nn.Module):
                 )
                 l_dict = {k + f"_enc": v for k, v in l_dict.items()}
                 losses.update(l_dict)
-
-        return losses
+        end = time.time()
+        return losses, matching_time, assign_time, end - start
 
 
 class PostProcess(nn.Module):
-    """ This module converts the model's output into the format expected by the coco api"""
+    """This module converts the model's output into the format expected by the coco api"""
 
     def __init__(self, topk=100):
         super().__init__()
@@ -545,7 +674,7 @@ class PostProcess(nn.Module):
 
     @torch.no_grad()
     def forward(self, outputs, target_sizes):
-        """ Perform the computation
+        """Perform the computation
         Parameters:
             outputs: raw outputs of the model
             target_sizes: tensor of dimension [batch_size x 2] containing the size of each images of the batch
@@ -581,7 +710,7 @@ class PostProcess(nn.Module):
 
 
 class MLP(nn.Module):
-    """ Very simple multi-layer perceptron (also called FFN)"""
+    """Very simple multi-layer perceptron (also called FFN)"""
 
     def __init__(self, input_dim, hidden_dim, output_dim, num_layers):
         super().__init__()
@@ -598,7 +727,7 @@ class MLP(nn.Module):
 
 
 def build(args):
-    num_classes = 20 if args.dataset_file != "coco" else 91
+    num_classes = 365
     if args.dataset_file == "coco_panoptic":
         num_classes = 250
     device = torch.device(args.device)
