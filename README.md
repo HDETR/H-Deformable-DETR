@@ -281,6 +281,14 @@ We provide a set of baseline results and trained models available for download:
 </tr>
 </tbody></table>
 
+### Multi-scale test results
+
+| Setting      | AP(single-scale test) | AP(multi-scale test, without flip) |AP(multi-scale test, with flip) |
+| ----------- | ----------- |----------- |----------- |
+| h-detr, r50, 36eps, n300, top100      | 50.0       | 51.4 | 51.7 |
+| h-detr, swin large, 36eps, n900, top100   | 57.4        | 58.2 | 58.2 |
+| h-detr, swin large, 36eps, n900, top300   | 57.6        | 58.2 | --- |
+
 ## Installation
 We test our models under ```python=3.7.10,pytorch=1.10.1,cuda=10.2```. Other versions might be available as well.
 
